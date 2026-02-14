@@ -1,7 +1,7 @@
 /**
  * 📝 School Report Card Generator
  *
- * Sharma ji ke bete ka report card generate karna hai! Student ka naam aur
+ * Sharma ji ke Dete ka report card generate karna hai! Student ka naam aur
  * subjects ke marks milenge, tujhe pura analysis karke report card banana hai.
  *
  * Rules:
@@ -42,4 +42,43 @@
  */
 export function generateReportCard(student) {
   // Your code here
+  if(typeof student !== 'object' || student == null) return null;
+  if(typeof student.name !== 'string' || student.name.trim() == "" ) return null;
+  if(typeof student.marks !== 'object' || student.marks == null) return null;
+  // for(let subject in student.marks){
+  //   const mark = student.marks[subject];
+
+  //   if(typeof mark !== 'number' || mark<0 || mark>100) return null;
+  // }
+  let totalMarks=0;
+  let percentage;
+  let numSubjects=0;
+  let highestmark=-1,lowestmark=101;
+  let highestSubject ="",lowestSubject="";
+  const subjectnames = Object.keys(student.marks);
+  const values = Object.values(student.marks);
+  if(subjectnames.length === 0) return null;
+  let failedSubjects = [], passedSubjects =[];
+  for(var i=0; i<values.length;i++)
+  {
+    if(typeof values[i] !== 'number' || values[i]<0 || values[i]>100) return null;
+    else{
+          if(values[i]>highestmark){ highestmark=values[i]; highestSubject = subjectnames[i];}
+          if(values[i]<lowestmark){ lowestmark=values[i]; lowestSubject = subjectnames[i]};
+          totalMarks = totalMarks + values[i];
+          numSubjects++;
+          if(values[i]<40) failedSubjects.push(subjectnames[i]);
+          else passedSubjects.push(subjectnames[i]);
+    }
+  }
+  percentage = parseFloat(((totalMarks/numSubjects)).toFixed(2));
+  let grade;
+  if(percentage>=90) grade="A+";
+  else if(percentage>=80) grade="A";
+  else if(percentage>=70) grade="B";
+  else if(percentage>=60) grade="C";
+  else if(percentage>=40) grade="D";
+  else grade="F";
+
+  return {name :student.name, totalMarks :totalMarks, percentage: percentage, grade:grade, highestSubject:highestSubject,lowestSubject:lowestSubject,passedSubjects:passedSubjects,failedSubjects:failedSubjects, subjectCount:numSubjects }
 }
